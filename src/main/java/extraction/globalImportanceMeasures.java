@@ -17,10 +17,23 @@ public class globalImportanceMeasures {
      * Metoda realizuje tworzenie ilościowej reprezentacji przestrzenno-wektorowej dla pojedyńczego artykułu
      *
      * @param binaryImportanceForAllArticle: Lista wektorów licalImportanceMeasures.binaryImportance dla wszystkich artyków
+     * @param allArticlesDict: lista słów ze wszystkich artykułów po deduplikacji, stemizacji i stopliście
      * @return quantitativeMap:TreeMap<String, Integer>
      */
 
-    public TreeMap<String, Integer> documentFrequency (ArrayList<TreeMap<String, Integer>> binaryImportanceForAllArticle ){
-
+    public TreeMap<String, Integer> documentFrequency (ArrayList<TreeMap<String, Integer>> binaryImportanceForAllArticle, ArrayList<String> allArticlesDict ){
+        TreeMap<String,Integer> docFrequency = new TreeMap<String, Integer>();
+        for (String word:allArticlesDict){
+            int counter=0;
+            for (TreeMap<String, Integer> binaryImportance: binaryImportanceForAllArticle){
+                if(binaryImportance.containsKey(word)){
+                    ++counter;
+                }
+            }
+            docFrequency.put(word,counter);
+        }
+        return  docFrequency;
     }
+
+    
 }
