@@ -11,7 +11,7 @@ import java.util.TreeMap;
  * 7. BM25 - uzależnia wynik dla słowa od relatywnej długości artykułu na tle innych artykułów ze zbioru: IDF * ((k + 1) * tf) / (k * (1.0 - b + b * (|d|/avgDl)) + tf)
  */
 
-public class globalImportanceMeasures {
+public class GlobalImportanceMeasures {
 
     /**
      * Metoda realizuje tworzenie ilościowej reprezentacji przestrzenno-wektorowej dla pojedyńczego artykułu
@@ -35,5 +35,5 @@ public class globalImportanceMeasures {
         return  docFrequency;
     }
 
-    
+
 }

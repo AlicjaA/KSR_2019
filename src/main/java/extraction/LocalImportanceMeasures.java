@@ -9,9 +9,10 @@ import java.util.TreeMap;
  *1. binarna (boolowska): jest, nie ma
  *2. ilościowa (quantitative): liczba wystąpień w dokumencie
  *3. TF (term frequency)-liczba wystąpień słowa do liczby słów w dokumencie
+ * 4. odległość w słowach od początku tekstu - im bliżej tym bardziej znacząca
  */
 
-public class localImportanceMeasures {
+public class LocalImportanceMeasures {
 
     /**
      * Metoda realizuje tworzenie binarnej reprezentacji przestrzenno-wektorowej dla pojedyńczego artykułu
