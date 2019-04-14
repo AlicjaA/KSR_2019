@@ -1,4 +1,4 @@
-package dataOperations;
+package dataImport;
 
     /**
      * @autor https://github.com/manishkanadje/reuters-21578/blob/master/ExtractReuters.java
@@ -19,7 +19,6 @@ package dataOperations;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileFilter;
 import java.io.FileReader;
 import java.io.IOException;
 import java.nio.file.Path;
@@ -208,6 +207,7 @@ import java.util.regex.Pattern;
                     buffer = new StringBuilder(10024);
                 }
                 reader.close();
+                buffer.delete(0,buffer.length());
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }

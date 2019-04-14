@@ -1,16 +1,17 @@
 package main;
 
 
-import dataOperations.Article;
-import dataOperations.ImportArticles;
+import dataImport.Article;
+import dataImport.ImportArticles;
+import extraction.ExtractionManager;
 
 import javax.swing.*;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.Scanner;
 
 public class Run {
 
@@ -34,7 +35,16 @@ public class Run {
         ImportArticles importer = new ImportArticles(articleList);
         importer.extract(path[0]);
 
-        System.in.read();
+        ExtractionManager extractionManager = new ExtractionManager();
+        extractionManager.tokenization(articleList);
+
+        ArrayList<String> dataToSave = new ArrayList<>();
+        for(Article article: articleList){
+            dataToSave.add(article.toString()+"\n");
+        }
+        Files.write (Paths.get(ClassLoader.getSystemClassLoader().getResource("results.txt").toString().substring(6).trim()), dataToSave);
+        //System.in.read();
+
 
     }
 }

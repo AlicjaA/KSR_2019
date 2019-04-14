@@ -1,7 +1,5 @@
-package dataOperations;
+package dataImport;
 
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlElementWrapper;
 import java.util.*;
 
 public class Article {
@@ -19,7 +17,7 @@ public class Article {
     private String body;
     private ArrayList<String> words;
     private Map<String, Integer> terms;
-
+    private ArrayList<String> basicTerms;
     public Article(TreeMap<String, ArrayList<String>> articleData){
         this.topics= new ArrayList<>();
         this.places=new ArrayList<>();
@@ -101,7 +99,8 @@ public class Article {
     }
 
     public void setWords(ArrayList<String> words) {
-        this.words = words;
+        this.words=new ArrayList<>();
+        for(String word: words){ this.words.add(word);}
     }
 
     public Map<String, Integer> getTerms() {
@@ -109,6 +108,32 @@ public class Article {
     }
 
     public void setTerms(Map<String, Integer> terms) {
-        this.terms = terms;
+        this.terms = new TreeMap<>();
+        this.terms.putAll(terms);
+    }
+
+    public ArrayList<String> getBasicTerms() {
+        return basicTerms;
+    }
+
+    public void setBasicTerms(ArrayList<String> basicTerms) {
+        this.basicTerms = new ArrayList<>();
+        for(String word: basicTerms){ this.basicTerms.add(word);}
+    }
+
+
+    @Override
+    public String toString() {
+       return "Article{" +
+                "\n date='" + date + '\'' +
+                "\n topics=" + topics +
+                "\n places=" + places +
+                "\n title='" + title + '\'' +
+                "\n dateline='" + dateline + '\'' +
+                "\n body='" + body + '\'' +
+                "\n words=" + words +
+                "\n terms=" + terms +
+                "\n basicTerms=" + basicTerms +
+                '}';
     }
 }
