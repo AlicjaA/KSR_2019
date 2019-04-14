@@ -2,9 +2,7 @@ package extraction.importanceMeasurment;
 
 import knn.similarityMeasures.NGramMeasure;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.TreeMap;
+import java.util.*;
 
 /**
  * @author Alicja Anszpergier
@@ -54,7 +52,7 @@ public class LocalImportanceMeasures {
         }
         return termFrequencyMap;
     }
-.
+
     /**
      * Metoda realizuje tworzenie reprezentacji przestrzenno-wektorowej dla pojedyńczego artykułu w oparciu
      * o częstotliwość występowania słowa na tle częstotliwości występowania pozostałych słów.
@@ -118,10 +116,17 @@ public class LocalImportanceMeasures {
                 similarityMap.put(w, nGram.termSimilarity(word, w));
             }
         }
-        int stDeviation = standardDeviation((ArrayList<Double>)similarityMap.values());
+        double stDeviation = standardDeviation((ArrayList<Double>)similarityMap.values());
+        TreeMap<String,Double> reverseSortedMap = new TreeMap<>();
+        similarityMap.entrySet()
+                .stream()
+                .sorted(Map.Entry.comparingByValue(Comparator.reverseOrder()))
+                .forEachOrdered(x -> reverseSortedMap.put(x.getKey(), x.getValue()));
+        double borderValue = reverseSortedMap.get(reverseSortedMap.firstKey())-stDeviation;
         for(String w:articleWords){
-            similarityMap.put(w, nGram.termSimilarity(word, w));
+            if(reverseSortedMap.get(w)>borderValue){similarWords.add(w);}
         }
+        return similarWords;
     }
 
     private Double standardDeviation(ArrayList<Double> values){
