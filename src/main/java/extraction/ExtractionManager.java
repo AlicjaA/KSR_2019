@@ -14,14 +14,19 @@ public class ExtractionManager {
     public void tokenization (ArrayList<Article> articles) throws IOException {
         for (Article article : articles){
             ArrayList<String> wordList = new ArrayList<>();
-            wordList= exOperate.makeDataList(article.getBody());
+            wordList= exOperate.makeDataList(article.getDateline());
+            wordList.addAll(exOperate.makeDataList(article.getTitle()));
+            wordList.addAll(exOperate.makeDataList(article.getAuthor()));
+            wordList.addAll(exOperate.makeDataList(article.getBody()));
+            wordList.addAll(exOperate.makeDataList(article.getUnknown()));
+            wordList.addAll(exOperate.makeDataList(article.getDate()));
+            wordList= exOperate.deleteStopwords(wordList);
             wordList= exOperate.cleanWordList(wordList);
             wordList= exOperate.toLowerCase(wordList);
             wordList= exOperate.stemmer(wordList);
             article.setWords(wordList);
             wordList= exOperate.deduplicate(wordList);
-            wordList= exOperate.deleteStopwords(wordList);
             article.setBasicTerms(wordList);
         }
-}
+    }
 }

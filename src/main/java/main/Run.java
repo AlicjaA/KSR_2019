@@ -43,7 +43,7 @@ public class Run {
             dataToSave.add(article.toString()+"\n");
         }
         Files.write (Paths.get(ClassLoader.getSystemClassLoader().getResource("results.txt").toString().substring(6).trim()), dataToSave);
-        //System.in.read();
+        System.in.read();
 
 
     }

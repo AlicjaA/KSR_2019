@@ -15,9 +15,11 @@ public class Article {
     private String title;
     private String dateline;
     private String body;
+    private String author;
     private ArrayList<String> words;
     private Map<String, Integer> terms;
     private ArrayList<String> basicTerms;
+
     public Article(TreeMap<String, ArrayList<String>> articleData){
         this.topics= new ArrayList<>();
         this.places=new ArrayList<>();
@@ -56,8 +58,9 @@ public class Article {
         if(articleData.containsKey("UNKNOWN")){this.unknown = articleData.get("UNKNOWN").get(0);} else{this.unknown=" ";}
         if(articleData.containsKey("TITLE")){this.title = articleData.get("TITLE").get(0);} else{this.title=" ";}
         if(articleData.containsKey("DATELINE")){this.dateline = articleData.get("DATELINE").get(0);} else{this.dateline=" ";}
-        if(articleData.containsKey("BODY")){this.body = articleData.get("BODY").get(0);} else{
-        if(articleData.containsKey("TEXT TYPE=\"UNPROC\"")){this.body = articleData.get("TEXT TYPE=\"UNPROC\"").get(0);} else{this.body=" ";}}
+        if(articleData.containsKey("BODY")){this.body = articleData.get("BODY").get(0);} else{this.body=" ";}
+        if(articleData.containsKey("AUTHOR")){this.author = articleData.get("AUTHOR").get(0);}else{this.author=" ";}
+
 
     }
 
@@ -92,6 +95,10 @@ public class Article {
     }
     public String getBody() {
         return body;
+    }
+
+    public String getAuthor() {
+        return author;
     }
 
     public ArrayList<String> getWords() {
@@ -131,6 +138,7 @@ public class Article {
                 "\n title='" + title + '\'' +
                 "\n dateline='" + dateline + '\'' +
                 "\n body='" + body + '\'' +
+                "\n author='" + author + '\'' +
                 "\n words=" + words +
                 "\n terms=" + terms +
                 "\n basicTerms=" + basicTerms +
