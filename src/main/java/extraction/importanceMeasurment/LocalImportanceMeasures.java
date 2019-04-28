@@ -11,6 +11,7 @@ import java.util.*;
  *2. TF (term frequency)-liczba wystąpień słowa do liczby słów w dokumencie
  *3. probabilistyczna - częstotliwość występowania termu do sumy częstotliwości występowania wszystkich termów.
  *4. własna
+ * 5. binarna - jest,  nie ma
  */
 
 public class LocalImportanceMeasures {
@@ -19,38 +20,30 @@ public class LocalImportanceMeasures {
      * Metoda realizuje tworzenie ilościowej reprezentacji przestrzenno-wektorowej dla pojedyńczego artykułu
      *
      * @param articleWords: reprezentacja artykułu w postaci stringu po stemizacji i stopliście
-     * @param articlesDict: lista słów z artykułu po deduplikacji, stemizacji i stopliście
-     * @return quantitativeMap:TreeMap<String, Integer>
+     * @param word: słowo kluczowe
+     * @return count: double
      */
-    public TreeMap<String, Integer> quantitativeImportance(ArrayList<String> articleWords,  ArrayList<String> articlesDict){
-        TreeMap<String, Integer> quantitativeMap = new TreeMap<String, Integer>();
-        for (String word: articlesDict){
-            int count=0;
-            for (String aword: articleWords){
-                if (aword.equals(word)){
-                    count++;
-                }
+    public double quantitativeImportance(ArrayList<String> articleWords,  String word){
+        int count=0;
+        for (String aword: articleWords){
+            if (aword.equals(word)){
+                count++;
             }
-            quantitativeMap.put(word,count);
         }
-        return quantitativeMap;
+        return count;
     }
 
     /**
      * Metoda realizuje tworzenie reprezentacji przestrzenno-wektorowej dla pojedyńczego artykułu w oparciu o częstotliwość występowania słowa w artykule
      *
      * @param articleWords: reprezentacja artykułu w postaci stringu po stemizacji i stopliście
-     * @param articlesDict: lista słów z artykułu po deduplikacji, stemizacji i stopliście
-     * @return termFrequencyMap:TreeMap<String, Integer>
+     * @param word: słowo kluczowe
+     * @return count: double
      */
-    public TreeMap<String, Integer> termFrequency (ArrayList<String> articleWords,  ArrayList<String> articlesDict){
-        TreeMap<String, Integer> termFrequencyMap = new TreeMap<String, Integer>();
-        TreeMap<String, Integer> quantitativeMap  =  new TreeMap<String, Integer>();
-        quantitativeMap=quantitativeImportance(articleWords,articlesDict);
-        for (String word: articlesDict ){
-            termFrequencyMap.put(word,(quantitativeMap.get(word).intValue()/articleWords.size()) );
-        }
-        return termFrequencyMap;
+    public double termFrequency (ArrayList<String> articleWords,  String word){
+        double quantitative=quantitativeImportance(articleWords,word);
+        double termFrequency = quantitative/articleWords.size();
+        return termFrequency;
     }
 
     /**
@@ -58,53 +51,58 @@ public class LocalImportanceMeasures {
      * o częstotliwość występowania słowa na tle częstotliwości występowania pozostałych słów.
      *
      * @param articleWords: reprezentacja artykułu w postaci stringu po stemizacji i stopliście
-     * @param articlesDict: lista słów z artykułu po deduplikacji, stemizacji i stopliście
-     * @return probabilistic:TreeMap<String, Integer>
+     * @param articleDict: słowa kluczowe
+     * @param word: słowo kluczowe, dla którego liczymy
+     * @return probabilistic: double
      */
-    public TreeMap<String, Integer> probabilisticImportance (ArrayList<String> articleWords,  ArrayList<String> articlesDict){
-        TreeMap<String, Integer> termFrequencyMap = new TreeMap<String, Integer>();
-        TreeMap<String, Integer> probabilisticMap  =  new TreeMap<String, Integer>();
-        termFrequencyMap=termFrequency(articleWords,articlesDict);
-        for (String word: articlesDict ){
-            int termFrequencySum = 0;
-            for(String w:articlesDict){
-                if(!w.equals(word)){
-                    termFrequencySum+=termFrequencyMap.get(word).intValue();
-                }
-
-            }
-            probabilisticMap.put(word,(termFrequencyMap.get(word).intValue()/termFrequencySum) );
+    public double probabilisticImportance (ArrayList<String> articleWords,  ArrayList<String> articleDict, String word){
+        TreeMap<String, Double> termFrequencyMap = new TreeMap<String, Double>();
+        double probabilistic =0;
+        for(String kWord: articleDict){
+            termFrequencyMap.put(kWord, termFrequency(articleWords,kWord));
         }
-        return probabilisticMap;
+        int termFrequencySum = 0;
+        for(String w:articleDict){
+            if(!w.equals(word)){
+                termFrequencySum+=termFrequencyMap.get(word);
+            }
+
+        }
+        if(termFrequencySum>0) {
+            probabilistic = termFrequencyMap.get(word) / termFrequencySum;
+        }
+        return probabilistic;
     }
 
     /**
      * Metoda realizuje tworzenie reprezentacji przestrzenno-wektorowej dla pojedyńczego artykułu w oparciu
-     * o częstotliwość występowania słowa na tle częstotliwości występowania pozostałych słów.
+     * o częstotliwość występowania słowa i słów podobnych na tle częstotliwości występowania pozostałych słów.
      *
      * @param articleWords: reprezentacja artykułu w postaci stringu po stemizacji i stopliście
-     * @param articlesDict: lista słów z artykułu po deduplikacji, stemizacji i stopliście
-     * @return probabilistic:TreeMap<String, Integer>
+     * @param articleDict: lista słów z artykułu po deduplikacji, stemizacji i stopliście
+     * @return probabilisticSimilarityImportance:TreeMap<String, double>
      */
-    public TreeMap<String, Integer> probabilisticSimilarityImportance (ArrayList<String> articleWords,  ArrayList<String> articlesDict){
-        TreeMap<String, Integer> termFrequencyMap = new TreeMap<String, Integer>();
-        TreeMap<String, Integer> probabilisticMap  =  new TreeMap<String, Integer>();
-        termFrequencyMap=termFrequency(articleWords,articlesDict);
-        for (String word: articlesDict ){
-            ArrayList<String> similarWords = getSimilarWords(word, articleWords);
-            int termFrequencySumOther = 0;
-            int termFrequencySum = 0;
-            for(String sword:similarWords){
-                termFrequencySum +=termFrequencyMap.get(sword).intValue();
-            }
-            for(String w:articlesDict){
-                if(!similarWords.contains(w)){
-                    termFrequencySumOther+=termFrequencyMap.get(word).intValue();
-                }
-            }
-            probabilisticMap.put(word,(termFrequencySum/termFrequencySumOther) );
+    public double probabilisticSimilarityImportance (ArrayList<String> articleWords,  ArrayList<String> articleDict, String word){
+        TreeMap<String, Double> termFrequencyMap = new TreeMap<String, Double>();
+        double probabilistic  = 0;
+        for(String aword:articleWords) {
+            termFrequencyMap.put(aword, termFrequency(articleWords, aword));
         }
-        return probabilisticMap;
+        ArrayList<String> similarWords = getSimilarWords(word, articleWords);
+        int termFrequencySumOther = 0;
+        int termFrequencySum = 0;
+        for(String sword:similarWords){
+            termFrequencySum +=termFrequencyMap.get(sword);
+        }
+        for(String w:articleDict){
+            if(!similarWords.contains(w)){
+                termFrequencySumOther+=termFrequencyMap.get(word);
+            }
+        }
+        if(termFrequencySumOther>0) {
+            probabilistic = termFrequencySum / termFrequencySumOther;
+        }
+        return probabilistic;
     }
 
     private ArrayList<String> getSimilarWords(String word, ArrayList<String> articleWords){
@@ -116,7 +114,11 @@ public class LocalImportanceMeasures {
                 similarityMap.put(w, nGram.termSimilarity(word, w));
             }
         }
-        double stDeviation = standardDeviation((ArrayList<Double>)similarityMap.values());
+        ArrayList<Double> values = new ArrayList<>();
+        for(double val: similarityMap.values()){
+            values.add(val);
+        }
+        double stDeviation = standardDeviation(values);
         TreeMap<String,Double> reverseSortedMap = new TreeMap<>();
         similarityMap.entrySet()
                 .stream()
@@ -124,7 +126,7 @@ public class LocalImportanceMeasures {
                 .forEachOrdered(x -> reverseSortedMap.put(x.getKey(), x.getValue()));
         double borderValue = reverseSortedMap.get(reverseSortedMap.firstKey())-stDeviation;
         for(String w:articleWords){
-            if(reverseSortedMap.get(w)>borderValue){similarWords.add(w);}
+            if(reverseSortedMap.get(w)>=borderValue){similarWords.add(w);}
         }
         return similarWords;
     }
@@ -140,5 +142,20 @@ public class LocalImportanceMeasures {
             sd += Math.pow(values.get(i) - (sum/values.size()),2) / values.size();
         }
         return Math. sqrt(sd);
+    }
+
+    /**
+     * Metoda realizuje tworzenie binarnej reprezentacji przestrzenno-wektorowej dla pojedyńczego artykułu
+     *
+     * @param articleWords: reprezentacja artykułu w postaci stringu po stemizacji i stopliście
+     * @param word: słowo ze słów kluczowych
+     * @return binary: double
+     */
+    public double binaryImportance(ArrayList<String> articleWords,  String word){
+        double binary = 0;
+        if(articleWords.contains(word)){
+            binary=1;
+        }
+        return binary;
     }
 }

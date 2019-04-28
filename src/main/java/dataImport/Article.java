@@ -17,7 +17,7 @@ public class Article {
     private String body;
     private String author;
     private ArrayList<String> words;
-    private Map<String, Integer> terms;
+    private Map<String, ArrayList<Double>> terms;
     private ArrayList<String> basicTerms;
 
     public Article(TreeMap<String, ArrayList<String>> articleData){
@@ -110,11 +110,11 @@ public class Article {
         for(String word: words){ this.words.add(word);}
     }
 
-    public Map<String, Integer> getTerms() {
+    public Map<String, ArrayList<Double>> getTerms() {
         return terms;
     }
 
-    public void setTerms(Map<String, Integer> terms) {
+    public void setTerms(Map<String, ArrayList<Double>> terms) {
         this.terms = new TreeMap<>();
         this.terms.putAll(terms);
     }

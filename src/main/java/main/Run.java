@@ -30,19 +30,7 @@ public class Run {
                 path[0] = w.getPath();
             }
         });
-        ArrayList<Article> articleList = new ArrayList<>();
-
-        ImportArticles importer = new ImportArticles(articleList);
-        importer.extract(path[0]);
-
-        ExtractionManager extractionManager = new ExtractionManager();
-        extractionManager.tokenization(articleList);
-
-        ArrayList<String> dataToSave = new ArrayList<>();
-        for(Article article: articleList){
-            dataToSave.add(article.toString()+"\n");
-        }
-        Files.write (Paths.get(ClassLoader.getSystemClassLoader().getResource("results.txt").toString().substring(6).trim()), dataToSave);
+        DataManager dataManager = new DataManager(path);
         System.in.read();
 
 

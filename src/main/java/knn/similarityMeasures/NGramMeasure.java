@@ -27,12 +27,16 @@ public class NGramMeasure {
         }
         if(firstWord.length()<secondWord.length()){
            max=secondWordGrams.size();
-            similarity=(2/((max-firstWord.length()+1)*(max - firstWord.length()+2)-(max-secondWord.length()+1)
-                    *(max-secondWord.length())));
+           double n = ((max-firstWord.length()+1)*(max - firstWord.length()+2)-(max-secondWord.length()+1)
+                   *(max-secondWord.length()));
+           if(n>0) {similarity=(2/n);}
+           else{similarity=0;}
         }else{
             max=firstWordGrams.size();
-            similarity=(2/((max-secondWord.length()+1)*(max - secondWord.length()+2)-(max-firstWord.length()+1)
-                    *(max-firstWord.length())));
+            double n =((max-secondWord.length()+1)*(max - secondWord.length()+2)-(max-firstWord.length()+1)
+                    *(max-firstWord.length()));
+            if(n>0) {similarity=(2/n);}
+            else{similarity=0;}
         }
         similarity= similarity*occurance;
         return similarity;
