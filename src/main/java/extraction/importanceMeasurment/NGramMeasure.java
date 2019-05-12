@@ -1,4 +1,4 @@
-package knn.similarityMeasures;
+package extraction.importanceMeasurment;
 
 import java.util.ArrayList;
 
@@ -8,8 +8,8 @@ import java.util.ArrayList;
 
 public class NGramMeasure {
     public Double termSimilarity(String firstWord, String secondWord){
-        double similarity = 0;
-        double occurance = 0;
+        double similarity = 0.0;
+        double occurance = 0.0;
         ArrayList<String> firstWordGrams = new ArrayList<>();
         ArrayList<String> secondWordGrams = new ArrayList<>();
         int max = 0;
@@ -40,7 +40,7 @@ public class NGramMeasure {
         return similarity;
     }
 
-    private ArrayList<String>generateGrams(String word, int size, int maxSize){
+    public ArrayList<String>generateGrams(String word, int size, int maxSize){
         ArrayList<String> wordGrams= new ArrayList<>();
         for(int j =0;j<word.length();++j){
             if((j+size)<=maxSize) {

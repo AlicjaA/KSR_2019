@@ -1,12 +1,9 @@
-package knn.similarityMeasures;
+package knn.distanceMeasures;
 
-
-import dataImport.Article;
 
 import java.util.ArrayList;
-import java.util.TreeMap;
 
-public class powerDistanceMeasuses {
+public class PowerDistanceMeasuses {
 
     private Double powerDistanceMeasuse(ArrayList<Double> first, ArrayList<Double> second,
                                                         Double p, Double r){

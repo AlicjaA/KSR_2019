@@ -1,7 +1,5 @@
 package extraction.importanceMeasurment;
 
-import knn.similarityMeasures.NGramMeasure;
-
 import java.util.*;
 
 /**
