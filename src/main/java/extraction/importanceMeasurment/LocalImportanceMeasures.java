@@ -23,7 +23,7 @@ public class LocalImportanceMeasures {
      * @param word: słowo kluczowe
      * @return count: double
      */
-    public double quantitativeImportance(ArrayList<String> articleWords,  String word){
+    public Integer quantitativeImportance(ArrayList<String> articleWords,  String word){
         int count=0;
         for (String aword: articleWords){
             if (aword.equals(word)){
@@ -58,13 +58,13 @@ public class LocalImportanceMeasures {
     public double probabilisticImportance (ArrayList<String> articleWords,  ArrayList<String> articleDict, String word){
         TreeMap<String, Double> termFrequencyMap = new TreeMap<String, Double>();
         double probabilistic =0;
-        for(String kWord: articleDict){
-            termFrequencyMap.put(kWord, termFrequency(articleWords,kWord));
+        for(int i=0;i<articleDict.size();++i){
+            termFrequencyMap.put(articleDict.get(i), termFrequency(articleWords,articleDict.get(i)));
         }
-        int termFrequencySum = 0;
-        for(String w:articleDict){
-            if(!w.equals(word)){
-                termFrequencySum+=termFrequencyMap.get(word);
+        double termFrequencySum = 0;
+        for(int j=0;j<articleDict.size();++j){
+            if(!(articleDict.get(j).equalsIgnoreCase(word))){
+                termFrequencySum+=termFrequencyMap.get(articleDict.get(j));
             }
 
         }
@@ -79,24 +79,29 @@ public class LocalImportanceMeasures {
      * o częstotliwość występowania słowa i słów podobnych na tle częstotliwości występowania pozostałych słów.
      *
      * @param articleWords: reprezentacja artykułu w postaci stringu po stemizacji i stopliście
-     * @param articleDict: lista słów z artykułu po deduplikacji, stemizacji i stopliście
+     * @param keys: lista słów z artykułu po deduplikacji, stemizacji i stopliście
      * @return probabilisticSimilarityImportance:TreeMap<String, double>
      */
-    public double probabilisticSimilarityImportance (ArrayList<String> articleWords,  ArrayList<String> articleDict, String word){
+    public Double probabilisticSimilarityImportance (ArrayList<String> articleWords,  ArrayList<String> keys, String word){
         TreeMap<String, Double> termFrequencyMap = new TreeMap<String, Double>();
-        double probabilistic  = 0;
-        for(String aword:articleWords) {
+        double probabilistic  = 0.0;
+        for(String aword:keys) {
             termFrequencyMap.put(aword, termFrequency(articleWords, aword));
         }
         ArrayList<String> similarWords = getSimilarWords(word, articleWords);
-        int termFrequencySumOther = 0;
-        int termFrequencySum = 0;
+        for(String sword:articleWords){
+            if(!keys.contains(sword)){
+                termFrequencyMap.put(sword, termFrequency(articleWords, sword));
+            }
+        }
+        double termFrequencySumOther = 0.0;
+        double termFrequencySum = 0.0;
         for(String sword:similarWords){
             termFrequencySum +=termFrequencyMap.get(sword);
         }
-        for(String w:articleDict){
+        for(String w:articleWords){
             if(!similarWords.contains(w)){
-                termFrequencySumOther+=termFrequencyMap.get(word);
+                termFrequencySumOther+=termFrequencyMap.get(w);
             }
         }
         if(termFrequencySumOther>0) {
@@ -119,19 +124,15 @@ public class LocalImportanceMeasures {
             values.add(val);
         }
         double stDeviation = standardDeviation(values);
-        TreeMap<String,Double> reverseSortedMap = new TreeMap<>();
-        similarityMap.entrySet()
-                .stream()
-                .sorted(Map.Entry.comparingByValue(Comparator.reverseOrder()))
-                .forEachOrdered(x -> reverseSortedMap.put(x.getKey(), x.getValue()));
-        double borderValue = reverseSortedMap.get(reverseSortedMap.firstKey())-stDeviation;
-        for(String w:articleWords){
-            if(reverseSortedMap.get(w)>=borderValue){similarWords.add(w);}
+        values.sort(Comparator.reverseOrder());
+        double borderValue = values.get(0)-stDeviation;
+        for(String w:similarityMap.keySet()){
+            if(similarityMap.get(w)>=borderValue && similarityMap.get(w)>0){similarWords.add(w);}
         }
         return similarWords;
     }
 
-    private Double standardDeviation(ArrayList<Double> values){
+    public Double standardDeviation(ArrayList<Double> values){
         double sum=0.0;
         for(Double value:values){
             sum+=value;
@@ -141,7 +142,7 @@ public class LocalImportanceMeasures {
         {
             sd += Math.pow(values.get(i) - (sum/values.size()),2) / values.size();
         }
-        return Math. sqrt(sd);
+        return Math.sqrt(sd);
     }
 
     /**

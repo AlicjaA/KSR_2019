@@ -27,22 +27,20 @@ public class NGramMeasure {
         }
         if(firstWord.length()<secondWord.length()){
            max=secondWordGrams.size();
-           double n = ((max-firstWord.length()+1)*(max - firstWord.length()+2)-(max-secondWord.length()+1)
-                   *(max-secondWord.length()));
-           if(n>0) {similarity=(2/n);}
-           else{similarity=0;}
         }else{
             max=firstWordGrams.size();
-            double n =((max-secondWord.length()+1)*(max - secondWord.length()+2)-(max-firstWord.length()+1)
-                    *(max-firstWord.length()));
-            if(n>0) {similarity=(2/n);}
-            else{similarity=0;}
         }
+
+        double n = ((max-firstWord.length()+1)*(max - firstWord.length()+2)-(max-secondWord.length()+1)
+                *(max-secondWord.length()));
+        if(n>0) {similarity=(2/n);}
+        else{similarity=0;}
+
         similarity= similarity*occurance;
         return similarity;
     }
 
-    public ArrayList<String>generateGrams(String word, int size, int maxSize){
+    private ArrayList<String>generateGrams(String word, int size, int maxSize){
         ArrayList<String> wordGrams= new ArrayList<>();
         for(int j =0;j<word.length();++j){
             if((j+size)<=maxSize) {

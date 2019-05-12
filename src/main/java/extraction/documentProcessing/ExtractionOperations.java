@@ -60,6 +60,12 @@ public class ExtractionOperations {
             word = word.replaceAll("('m)", "");
             word = word.replaceAll("('ve)", "");
             word = word.replaceAll("\\d", "");
+            if(word.length()==1){word = word.replaceAll(".{1}", "");}
+            if(word.contains("f\u001Freut")){word = word.replaceAll(".", "");}
+            word=word.replaceAll("(\\p{Z})","");
+            word=word.replaceAll("(\\p{So})","");
+            word=word.replaceAll(" ","");
+            word=word.replaceAll("\\p{C}","");
             wordList.set(i, word);
         }
         wordList.removeAll(Collections.singleton(""));

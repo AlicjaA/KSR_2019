@@ -2,6 +2,7 @@ package main;
 
 import javax.swing.*;
 import java.nio.file.Path;
+import java.util.ArrayList;
 
 public class Window extends JFrame {
     private Path path;
