@@ -1,11 +1,11 @@
 package dataImport;
 
+import dataModel.Article;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.nodes.Node;
 import org.jsoup.nodes.TextNode;
-import org.jsoup.parser.Tag;
 import org.jsoup.select.Elements;
 
 import java.io.File;
@@ -23,20 +23,20 @@ public class ImportArticles {
         this.articles=articles;
     }
 
-    public void extract(Path fileDir, String labelTag, String featureTag) {
+    public void extract(Path fileDir, String labelTag, String featureTag, String startingTag) {
         File folder =new File(fileDir.toString());
 
         sgmFiles = folder.listFiles();
         if (sgmFiles != null && sgmFiles.length > 0) {
             for (File sgmFile : sgmFiles) {
-                extractFile(articles, sgmFile, labelTag, featureTag);
+                extractFile(articles, sgmFile, labelTag, featureTag, startingTag);
             }
         } else {
             System.err.println("No .sgm files in " + fileDir);
         }
     }
 
-    protected void extractFile(ArrayList<Article> articles, File sgmFile, String labelTag, String featureTag) {
+    protected void extractFile(ArrayList<Article> articles, File sgmFile, String labelTag, String featureTag, String startingTag) {
         TreeMap<String, ArrayList<String>> articleData = new TreeMap<>();
         Document doc = null;
         try {
@@ -47,7 +47,7 @@ public class ImportArticles {
         Elements e = new Elements();
         Elements ed = new Elements();
         ArrayList<String> s = new ArrayList<>();
-        Elements singleArticle = doc.getElementsByTag("REUTERS");
+        Elements singleArticle = doc.getElementsByTag(startingTag);
 
         for (Element text: singleArticle) {
             List<Node> nodes = text.childNodes();

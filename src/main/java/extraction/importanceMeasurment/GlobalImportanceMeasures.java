@@ -1,9 +1,8 @@
 package extraction.importanceMeasurment;
 
-import dataImport.Article;
+import dataModel.Article;
 
 import java.util.ArrayList;
-import java.util.TreeMap;
 
 /**
  * @autor: Alicja Anszpergier

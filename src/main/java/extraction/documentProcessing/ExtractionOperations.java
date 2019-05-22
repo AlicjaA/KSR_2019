@@ -1,11 +1,16 @@
 package extraction.documentProcessing;
 
+import dataModel.Article;
+import dataModel.Feature;
+import extraction.importanceMeasurment.LocalImportanceMeasures;
+import extraction.importanceMeasurment.GlobalImportanceMeasures;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Locale;
+import java.util.TreeMap;
 
 public class ExtractionOperations {
 
@@ -95,4 +100,140 @@ public class ExtractionOperations {
         return wordList;
     }
 
+    private void normalization(ArrayList<Feature> values){
+        Double min= null;
+        Double max=0.0;
+        for(Feature v: values){
+            if(v.getValue() != null) {
+                max = (v.getValue() > max) ? v.getValue() : max;
+                min = (min == null) ? v.getValue() : (v.getValue() < min) ? v.getValue() : min;
+            }
+        }
+
+        for(Feature v: values){
+            if(v.getValue() != null) {
+                double normalizedValue = 0.0;
+                normalizedValue = (v.getValue() - min) / (max - min);
+                v.setValue(normalizedValue);
+            }
+        }
+
+    }
+
+    public ArrayList<Feature> calculateFeatures(Article article, ArrayList<Integer> chosenFeatures, ArrayList<String> keys) {
+        LocalImportanceMeasures localImp = new LocalImportanceMeasures();
+        ArrayList<Feature> features = new ArrayList<>();
+        if (chosenFeatures.contains(1)) {
+            double sum = 0.0;
+            for (String key : keys) {
+                sum += localImp.quantitativeImportance(article.getWords(), key);
+            }
+            Feature feature = new Feature("AVGQI");
+            feature.setValue(sum / keys.size());
+            features.add(feature)
+            ;
+        }
+        if (chosenFeatures.contains(2)) {
+            double sum = 0.0;
+            for (String key : keys) {
+                sum += localImp.binaryImportance(article.getWords(), key);
+            }
+            Feature feature = new Feature("AVGSBI");
+            feature.setValue(sum / keys.size());
+            features.add(feature)
+            ;
+        }
+        if (chosenFeatures.contains(3)) {
+            double sum = 0.0;
+            for (String key : keys) {
+                sum += localImp.probabilisticImportance(article.getWords(), keys, key);
+            }
+
+            Feature feature = new Feature("SPI");
+            feature.setValue(sum);
+            features.add(feature)
+            ;
+        }
+        if (chosenFeatures.contains(4)) {
+            double sum = 0.0;
+            for (String key : keys) {
+                sum += localImp.probabilisticSimilarityImportance(article.getWords(), keys, key);
+            }
+            Feature feature = new Feature("SPSI");
+            feature.setValue(sum);
+            features.add(feature)
+            ;
+        }
+        if (chosenFeatures.contains(5)) {
+            double sum = 0.0;
+            for (String key : keys) {
+                sum += localImp.termFrequency(article.getWords(), key);
+            }
+            Feature feature = new Feature("STF");
+            feature.setValue(sum);
+            features.add(feature);
+        }
+        if (chosenFeatures.contains(6)) {
+            Feature feature = new Feature("STRING");
+            feature.setsValue(article.getFeatureString());
+            features.add(feature);
+        }
+
+        normalization(features);
+        return features;
+    }
+
+    public ArrayList<String> generateKeys(ArrayList<Article> articles, ArrayList<String> candidateKeys, char selectingMethod)
+    {
+        GlobalImportanceMeasures glImpMeass = new GlobalImportanceMeasures();
+        LocalImportanceMeasures localImp = new LocalImportanceMeasures();
+        ArrayList<String> finalKays = new ArrayList<>();
+        TreeMap<String, Double> keys = new TreeMap<String, Double>();
+        candidateKeys = deduplicate(candidateKeys);
+        ArrayList<Double> measureList = new ArrayList<>();
+        for(String word: candidateKeys){
+            Double measure=0.0;
+            switch (selectingMethod){
+                case 'i':{
+                    measure= glImpMeass.inverseDocumentFrequency(articles,word);
+                    measureList.add(measure);
+                    keys.put(word,measure);
+                    break;
+                }
+                case 't':{
+                    measure= glImpMeass.inverseDocumentFrequency(articles,word);
+                    measureList.add(measure);
+                    keys.put(word,measure);
+                    break;
+                }
+                default:{
+                    break;
+                }
+            }
+        }
+        Collections.sort(measureList);
+
+        if(selectingMethod !='c') {
+            double standardDeviation = localImp.standardDeviation(measureList)*2;
+            double borderValue = measureList.get(0) + standardDeviation;
+            double minValue = measureList.get(0);
+
+            ArrayList<String> iterator = new ArrayList<>();
+            for (String key : keys.navigableKeySet()) {
+                boolean check = false;
+
+                check = (keys.get(key) > borderValue && keys.get(key) > minValue);
+                if (check) {
+                    iterator.add(key);
+                }
+            }
+            for (String key : iterator) {
+                keys.remove(key);
+            }
+            for(String key:keys.navigableKeySet()){
+                finalKays.add(key);
+            }
+        }
+        return finalKays;
+    }
 }

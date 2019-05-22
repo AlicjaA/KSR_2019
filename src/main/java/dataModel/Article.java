@@ -1,42 +1,21 @@
-package dataImport;
+package dataModel;
 
 import java.util.*;
 
 public class Article {
 
-
     private String text;
     private String label;
-    private String feature;
+    private String knnLabel;
+    private String featureString;
     private ArrayList<String> words;
     private ArrayList<String> terms;
-    public static class Features{
-        private String name;
-        private Double value;
-        private String sValue;
-        public Features(String name){ this.name=name; this.value=null; this.sValue=null;}
-        public Double getValue() {
-            return value;
-        }
-        public void setValue(Double value) {
-            this.value = value;
-        }
-        public String getsValue() {
-            return sValue;
-        }
-        public void setsValue(String sValue) {
-            this.sValue = sValue;
-        }
-
-        @Override
-        public String toString() {
-            return "{name='" + name +"' sValue='"+sValue +"' value='"+value+"}";
-        }
-    };
-    ArrayList<Features>features;
+    FeaturesList features;
+    TreeMap<Integer,Double> trainingSetDistances;
 
     public Article(TreeMap<String, ArrayList<String>> articleData){
-        features = new ArrayList<>();
+
+        features = new FeaturesList();
         if(articleData.containsKey("LABEL")){
             this.label=articleData.get("LABEL").get(0);}
         else{
@@ -47,10 +26,11 @@ public class Article {
         else{
             this.text=" ";}
         if(articleData.containsKey("FEATURE")){
-            this.feature = articleData.get("FEATURE").get(0);}
+            this.featureString = articleData.get("FEATURE").get(0);}
         else{
-            this.feature=" ";}
+            this.featureString =" ";}
     }
+
 
     public String getText() {
         return text;
@@ -60,12 +40,12 @@ public class Article {
         return label;
     }
 
-    public String getFeature() {
-        return feature;
+    public String getFeatureString() {
+        return featureString;
     }
 
-    public void setFeature(String feature) {
-        this.feature = feature;
+    public void setFeatureString(String featureString) {
+        this.featureString = featureString;
     }
 
     public ArrayList<String> getWords() {
@@ -90,12 +70,36 @@ public class Article {
         this.label = label;
     }
 
-    public ArrayList<Features> getFeatures() {
+    public TreeMap<Integer, Double> getTrainingSetDistances() {
+        return trainingSetDistances;
+    }
+
+    public void setTrainingSetDistances(TreeMap<Integer, Double> trainingSetDistances) {
+        this.trainingSetDistances = trainingSetDistances;
+    }
+
+    public void addTrainingSetDistance(Integer articleID, Double distance) {
+        this.trainingSetDistances.put(articleID, distance);
+    }
+
+    public FeaturesList getFeaturesList() {
         return features;
     }
 
-    public void setFeatures(ArrayList<Features> features) {
-        for(Features f:features){ this.features.add(f);}
+    public void setFeatures(ArrayList<Feature> features) {
+        this.features.setFeatures(features);
+    }
+
+    public void addFeature(Feature feature) {
+        this.features.addFeature(feature);
+    }
+
+    public String getKnnLabel() {
+        return knnLabel;
+    }
+
+    public void setKnnLabel(String knnLabel) {
+        this.knnLabel = knnLabel;
     }
 
     @Override
@@ -105,8 +109,9 @@ public class Article {
                 "\n text='" + text + '\'' +
                 "\n words='" + words +'\'' +
                 "\n terms='" + terms +'\'' +
-               "\n feature='" + feature +'\'' +
-               "\n features='" + features +
+               "\n featureString='" + featureString +'\'' +
+               "\n features='" + features +'\'' +
+               "\n distances='" + features +
                 '}';
     }
 }
