@@ -82,7 +82,7 @@ public class ImportArticles {
             }
 
             if(!featureTag.equals("empty")) {
-                String[] sb = text.getElementsByTag(featureTag).text().split(", ");
+                String[] sb = text.getElementsByTag(featureTag).text().split(",");
                 ArrayList<String> sss = new ArrayList<>();
                 sss.add(sb[0]);
                 articleData.put("FEATURE", sss);

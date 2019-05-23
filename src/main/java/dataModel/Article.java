@@ -28,7 +28,7 @@ public class Article {
         if(articleData.containsKey("FEATURE")){
             this.featureString = articleData.get("FEATURE").get(0);}
         else{
-            this.featureString =" ";}
+            this.featureString =null;}
     }
 
 
@@ -104,14 +104,15 @@ public class Article {
 
     @Override
     public String toString() {
-       return "Article{" +
-                "\n label='" + label + '\'' +
-                "\n text='" + text + '\'' +
-                "\n words='" + words +'\'' +
-                "\n terms='" + terms +'\'' +
-               "\n featureString='" + featureString +'\'' +
-               "\n features='" + features +'\'' +
-               "\n distances='" + features +
+        return "Article{" +
+                "text='" + text + '\'' +
+                ", label='" + label + '\'' +
+                ", knnLabel='" + knnLabel + '\'' +
+                ", featureString='" + featureString + '\'' +
+                ", words=" + words +
+                ", terms=" + terms +
+                ", features=" + features +
+                ", trainingSetDistances=" + trainingSetDistances +
                 '}';
     }
 }

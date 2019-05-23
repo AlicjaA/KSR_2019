@@ -22,8 +22,7 @@ public class Run {
         if(selectingMethod=='c'){
             customKeys = ui.getAsStringArrayList("Podaj własne słowa kluczowe oddzielone spacją:");
         }
-        startingTag=ui.getAsString("Podaj tag oddzielający artykuły (np. dla reuters jest to 'REUTERS':");
-        startingTag.toUpperCase();
+        startingTag=ui.getAsString("Podaj tag oddzielający artykuły (np. dla reuters jest to 'REUTERS'):");
         keyLabels = ui.getAsStringArrayList("Podaj etykiety oddzielone spacją:");
         labelTag = ui.getAsString("Podaj tag etykiety:");
         choosenFeatures=ui.getAsIntList("Podaj numery cech, których chcesz użyć: 1-śr liczba wystąpień słów kluczowych " +
