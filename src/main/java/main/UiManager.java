@@ -52,10 +52,10 @@ public class UiManager {
     public ArrayList<Integer> getAsIntList(String label){
         System.out.println(label);
         Scanner scanner = new Scanner(System. in).useDelimiter("\\n");
-        char[] s = scanner.nextLine().toCharArray();
+        String[] s = scanner.nextLine().split(",");
         ArrayList<Integer> integers=new ArrayList<>();
-        for(char c: s){
-            integers.add(Character.getNumericValue(c));
+        for(String c: s){
+            integers.add(Integer.valueOf(c));
         }
         return integers;
     }

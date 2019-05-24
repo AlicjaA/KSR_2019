@@ -1,13 +1,13 @@
 package knn;
 
 import dataModel.*;
+import extraction.Features.QLFeatures;
 import knn.distanceMeasures.NGramDistanceMeasure;
 import knn.distanceMeasures.PowerDistanceMeasuses;
 
 import com.google.common.collect.Maps;
 import java.util.Comparator;
 import java.util.*;
-import java.util.stream.Collectors;
 
 
 public class KNN {
@@ -151,12 +151,13 @@ public class KNN {
                             break;
                         }
                     }
-                    if(article.getFeatureString()== null){
+                    if(article.getFeatureString()=="empty"){
                         finalResult=doubleResult;
                     }
                     else {
                         NGramDistanceMeasure nGramDist = new NGramDistanceMeasure();
-                        Double stringResult= nGramDist.nGramDistanceMeasure(featuresList.getFeature("STRING").getsValue(), article.getFeatureString(),distanceMeasure);
+                        Double stringResult= nGramDist.nGramDistanceMeasure(featuresList.getFeature(QLFeatures.STRING.name()).getsValue(), article.getFeatureString(),
+                                distanceMeasure);
                         finalResult= calculateWeightedAverageResult(doubleResult,stringResult,articleDoubleFeatures.size());
                     }
                     articleToTrainingSetDistances.put(featuresList.getId(),finalResult);
@@ -172,7 +173,7 @@ public class KNN {
         ArrayList<Double> doubleFeatures = new ArrayList<>();
         for(Feature feature : featuresList.getFeatures()){
 
-            if(!(feature.getValue()==null)){
+            if(!(feature.getValue()==null) || (feature.getValue()==0.0)){
                 doubleFeatures.add(feature.getValue());
             }
         }

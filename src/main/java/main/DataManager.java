@@ -23,7 +23,7 @@ public class DataManager {
     ArrayList<String> keyWords;
 
     public DataManager(Path path, char selectingMethod, ArrayList<String> keyLabels, String labelsTag, String featureTag,
-                       ArrayList<String> customKeys, ArrayList<Integer> choosenfeatures, Double trainingPercent, char distanceMeasure, int k, String startingTag) throws IOException {
+                       ArrayList<String> customKeys, ArrayList<Integer> choosenfeatures, Double trainingPercent, char distanceMeasure, int k, String startingTag, String splitter) throws IOException {
         extractionManager = new ExtractionManager();
 
         this.keyLabels=keyLabels;
@@ -35,7 +35,7 @@ public class DataManager {
         else{
             keyWords = new ArrayList<>();
         }
-        importArticles(path, featureTag.toUpperCase(), labelsTag.toUpperCase(), trainingPercent, startingTag);
+        importArticles(path, featureTag.toUpperCase(), labelsTag.toUpperCase(), trainingPercent, startingTag, splitter);
         extraction(selectingMethod, choosenfeatures);
         knn = new KNN(trainingArticleList,keyLabels,distanceMeasure);
         results= new ArrayList<>();
@@ -43,12 +43,12 @@ public class DataManager {
         saveData();
     }
 
-    private void importArticles(Path path, String featureTag, String labelTag, Double trainingPercent, String startingTag){
+    private void importArticles(Path path, String featureTag, String labelTag, Double trainingPercent, String startingTag, String splitter){
         articleList = new ArrayList<>();
         testingArticleList =new ArrayList<>();
         trainingArticleList = new ArrayList<>();
         ImportArticles importer = new ImportArticles(articleList);
-        importer.extract(path, labelTag, featureTag, startingTag);
+        importer.extract(path, labelTag, featureTag, startingTag, splitter);
         for(Article article:articleList){
             if(!keyLabels.contains(article.getLabel())){
                 article.setLabel("unknown");

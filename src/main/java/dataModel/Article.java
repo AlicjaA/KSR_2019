@@ -28,7 +28,7 @@ public class Article {
         if(articleData.containsKey("FEATURE")){
             this.featureString = articleData.get("FEATURE").get(0);}
         else{
-            this.featureString =null;}
+            this.featureString = "empty";}
     }
 
 
@@ -87,6 +87,7 @@ public class Article {
     }
 
     public void setFeatures(ArrayList<Feature> features) {
+
         this.features.setFeatures(features);
     }
 

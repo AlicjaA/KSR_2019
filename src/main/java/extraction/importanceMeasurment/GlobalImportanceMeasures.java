@@ -37,7 +37,7 @@ public class GlobalImportanceMeasures {
         return Math.log(articles.size()/df);
     }
 
-    public Double averageTFIDFMethod (ArrayList<Article> articles, String word){
+    public Double TFIDFMethod(ArrayList<Article> articles, String word){
         LocalImportanceMeasures l = new LocalImportanceMeasures();
         Double[] tf =new Double[articles.size()];
         for(int i=0;i<articles.size();++i){
@@ -46,9 +46,10 @@ public class GlobalImportanceMeasures {
         Double idf = inverseDocumentFrequency(articles,word);
         Double tfidfSum=0.0;
         for(Double d:tf){
-            tfidfSum+=(d/idf);
+            tfidfSum+=d;
         }
-        return tfidfSum/tf.length;
+        //tfidfSum=tfidfSum/tf.length;
+        return tfidfSum*idf;
     }
 
 

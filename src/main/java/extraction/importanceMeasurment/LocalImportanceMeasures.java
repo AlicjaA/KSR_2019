@@ -49,25 +49,26 @@ public class LocalImportanceMeasures {
      * o częstotliwość występowania słowa na tle częstotliwości występowania pozostałych słów.
      *
      * @param articleWords: reprezentacja artykułu w postaci stringu po stemizacji i stopliście
-     * @param articleDict: słowa kluczowe
+     * @param terms: słowa kluczowe
      * @param word: słowo kluczowe, dla którego liczymy
      * @return probabilistic: double
      */
-    public double probabilisticImportance (ArrayList<String> articleWords,  ArrayList<String> articleDict, String word){
+    public double probabilisticImportance (ArrayList<String> articleWords,  ArrayList<String> terms, String word){
         TreeMap<String, Double> termFrequencyMap = new TreeMap<String, Double>();
+        double wordTF=termFrequency(articleWords,word);
         double probabilistic =0;
-        for(int i=0;i<articleDict.size();++i){
-            termFrequencyMap.put(articleDict.get(i), termFrequency(articleWords,articleDict.get(i)));
+        for(int i=0;i<terms.size();++i){
+            termFrequencyMap.put(terms.get(i), termFrequency(articleWords,terms.get(i)));
         }
         double termFrequencySum = 0;
-        for(int j=0;j<articleDict.size();++j){
-            if(!(articleDict.get(j).equalsIgnoreCase(word))){
-                termFrequencySum+=termFrequencyMap.get(articleDict.get(j));
+        for(int j=0;j<terms.size();++j){
+            if(!(terms.get(j).equalsIgnoreCase(word))){
+                termFrequencySum+=termFrequencyMap.get(terms.get(j));
             }
 
         }
         if(termFrequencySum>0) {
-            probabilistic = termFrequencyMap.get(word) / termFrequencySum;
+            probabilistic = wordTF / termFrequencySum;
         }
         return probabilistic;
     }
@@ -77,20 +78,19 @@ public class LocalImportanceMeasures {
      * o częstotliwość występowania słowa i słów podobnych na tle częstotliwości występowania pozostałych słów.
      *
      * @param articleWords: reprezentacja artykułu w postaci stringu po stemizacji i stopliście
-     * @param keys: lista słów z artykułu po deduplikacji, stemizacji i stopliście
+     * @param terms: lista słów z artykułu po deduplikacji, stemizacji i stopliście
      * @return probabilisticSimilarityImportance:TreeMap<String, double>
      */
-    public Double probabilisticSimilarityImportance (ArrayList<String> articleWords,  ArrayList<String> keys, String word){
+    public Double probabilisticSimilarityImportance (ArrayList<String> articleWords,  ArrayList<String> terms, String word){
         TreeMap<String, Double> termFrequencyMap = new TreeMap<String, Double>();
         double probabilistic  = 0.0;
-        for(String aword:keys) {
+        termFrequencyMap.put(word,termFrequency(articleWords, word));
+        for(String aword:terms) {
             termFrequencyMap.put(aword, termFrequency(articleWords, aword));
         }
         ArrayList<String> similarWords = getSimilarWords(word, articleWords);
         for(String sword:articleWords){
-            if(!keys.contains(sword)){
                 termFrequencyMap.put(sword, termFrequency(articleWords, sword));
-            }
         }
         double termFrequencySumOther = 0.0;
         double termFrequencySum = 0.0;
@@ -130,15 +130,20 @@ public class LocalImportanceMeasures {
         return similarWords;
     }
 
-    public Double standardDeviation(ArrayList<Double> values){
+    public Double average(ArrayList<Double> values){
         double sum=0.0;
         for(Double value:values){
             sum+=value;
         }
+        return sum/values.size();
+    }
+
+    public Double standardDeviation(ArrayList<Double> values){
+
         double sd = 0.0;
         for (int i = 0; i < values.size(); i++)
         {
-            sd += Math.pow(values.get(i) - (sum/values.size()),2) / values.size();
+            sd += Math.pow(values.get(i) - (average(values)),2) / values.size();
         }
         return Math.sqrt(sd);
     }

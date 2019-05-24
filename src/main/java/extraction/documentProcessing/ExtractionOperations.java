@@ -1,18 +1,34 @@
 package extraction.documentProcessing;
 
+
+import java.util.Comparator;
 import dataModel.Article;
 import dataModel.Feature;
+import extraction.Features.QLFeatures;
+import extraction.Features.QNFeatures;
 import extraction.importanceMeasurment.LocalImportanceMeasures;
 import extraction.importanceMeasurment.GlobalImportanceMeasures;
+
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Locale;
-import java.util.TreeMap;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class ExtractionOperations {
+    private class ValueComparator<K,V extends Comparable> implements Comparator<K>
+    {
+        private Map<K,V> map;
+
+        public ValueComparator(Map<K,V> map) {
+            this.map = new HashMap<>(map);
+        }
+
+        @Override
+        public int compare(K s1, K s2) {
+            return map.get(s1).compareTo(map.get(s2));
+        }
+    }
 
     public ArrayList<String> makeDataList(String data){
         ArrayList<String> list = new ArrayList<>();
@@ -124,60 +140,104 @@ public class ExtractionOperations {
         LocalImportanceMeasures localImp = new LocalImportanceMeasures();
         ArrayList<Feature> features = new ArrayList<>();
         if (chosenFeatures.contains(1)) {
-            double sum = 0.0;
-            for (String key : keys) {
-                sum += localImp.quantitativeImportance(article.getWords(), key);
-            }
-            Feature feature = new Feature("AVGQI");
-            feature.setValue(sum / keys.size());
-            features.add(feature)
-            ;
+
+            Feature feature = new Feature(QNFeatures.AVG_QI.name(), QNFeatures.AVG_QI.calculate(article,keys,localImp));
+            features.add(feature);
         }
         if (chosenFeatures.contains(2)) {
-            double sum = 0.0;
-            for (String key : keys) {
-                sum += localImp.binaryImportance(article.getWords(), key);
-            }
-            Feature feature = new Feature("AVGSBI");
-            feature.setValue(sum / keys.size());
-            features.add(feature)
-            ;
+
+            Feature feature = new Feature(QNFeatures.AVG_SUM_BI.name(),QNFeatures.AVG_SUM_BI.calculate(article,keys,localImp));
+            features.add(feature);
         }
         if (chosenFeatures.contains(3)) {
-            double sum = 0.0;
-            for (String key : keys) {
-                sum += localImp.probabilisticImportance(article.getWords(), keys, key);
-            }
 
-            Feature feature = new Feature("SPI");
-            feature.setValue(sum);
+
+            Feature feature = new Feature(QNFeatures.SUM_PI.name(),QNFeatures.SUM_PI.calculate(article,keys,localImp));
             features.add(feature)
             ;
         }
         if (chosenFeatures.contains(4)) {
-            double sum = 0.0;
-            for (String key : keys) {
-                sum += localImp.probabilisticSimilarityImportance(article.getWords(), keys, key);
-            }
-            Feature feature = new Feature("SPSI");
-            feature.setValue(sum);
-            features.add(feature)
-            ;
+
+            Feature feature = new Feature(QNFeatures.SUM_PSI.name(), QNFeatures.SUM_PSI.calculate(article,keys,localImp));
+            features.add(feature);
+
         }
         if (chosenFeatures.contains(5)) {
-            double sum = 0.0;
-            for (String key : keys) {
-                sum += localImp.termFrequency(article.getWords(), key);
-            }
-            Feature feature = new Feature("STF");
-            feature.setValue(sum);
+
+            Feature feature = new Feature(QNFeatures.SUM_TF.name(),QNFeatures.SUM_TF.calculate(article,keys,localImp));
             features.add(feature);
+
         }
         if (chosenFeatures.contains(6)) {
-            Feature feature = new Feature("STRING");
-            feature.setsValue(article.getFeatureString());
+            QLFeatures.STRING.name(); QLFeatures.STRING.calculate(article);
+
+            Feature feature = new Feature(QLFeatures.STRING.name(), QLFeatures.STRING.calculate(article));
             features.add(feature);
         }
+
+        if (chosenFeatures.contains(7) && chosenFeatures.contains(6) ) {
+
+            Feature feature = new Feature(QNFeatures.PSI_STRING_FEATURE.name(),QNFeatures.PSI_STRING_FEATURE.calculate(article,keys,localImp));
+            features.add(feature);
+
+        }
+
+        if (chosenFeatures.contains(8) && chosenFeatures.contains(6)) {
+
+            Feature feature = new Feature(QNFeatures.TF_STRING_FEATURE.name(),QNFeatures.TF_STRING_FEATURE.calculate(article,keys,localImp));
+            features.add(feature);
+
+        }
+
+        if (chosenFeatures.contains(9)) {
+
+            Feature feature = new Feature(QNFeatures.SUM_BI_F10P_KEYS.name(),QNFeatures.SUM_BI_F10P_KEYS.calculate(article,keys,localImp));
+            features.add(feature);
+
+        }
+
+        if (chosenFeatures.contains(10)) {
+
+            Feature feature = new Feature(QNFeatures.AVG_DIST_KEY_TXT_BEGIN.name(),QNFeatures.AVG_DIST_KEY_TXT_BEGIN.calculate(article,keys,localImp));
+            features.add(feature);
+
+        }
+
+        if (chosenFeatures.contains(11)) {
+
+            Feature feature = new Feature(QNFeatures.SUM_QI_F20P.name(),QNFeatures.SUM_QI_F20P.calculate(article,keys,localImp));
+            features.add(feature);
+
+        }
+
+        if (chosenFeatures.contains(12)) {
+
+            Feature feature = new Feature(QNFeatures.AVG_TF.name(),QNFeatures.AVG_TF.calculate(article,keys,localImp));
+            features.add(feature);
+
+        }
+
+        if (chosenFeatures.contains(13)) {
+
+            Feature feature = new Feature(QNFeatures.AVG_PSI.name(),QNFeatures.AVG_PSI.calculate(article,keys,localImp));
+            features.add(feature);
+
+        }
+
+        if (chosenFeatures.contains(14)) {
+
+            Feature feature = new Feature(QNFeatures.AVG_PI.name(),QNFeatures.AVG_PI.calculate(article,keys,localImp));
+            features.add(feature);
+
+        }
+
+        if (chosenFeatures.contains(15)) {
+
+            Feature feature = new Feature(QNFeatures.SUM_QI.name(),QNFeatures.SUM_QI.calculate(article,keys,localImp));
+            features.add(feature);
+
+        }
+
 
         normalization(features);
         return features;
@@ -201,7 +261,7 @@ public class ExtractionOperations {
                     break;
                 }
                 case 't':{
-                    measure= glImpMeass.inverseDocumentFrequency(articles,word);
+                    measure= glImpMeass.TFIDFMethod(articles,word);
                     measureList.add(measure);
                     keys.put(word,measure);
                     break;
@@ -211,29 +271,55 @@ public class ExtractionOperations {
                 }
             }
         }
-        Collections.sort(measureList);
+
 
         if(selectingMethod !='c') {
-            double standardDeviation = localImp.standardDeviation(measureList)*2;
-            double borderValue = measureList.get(0) + standardDeviation;
-            double minValue = measureList.get(0);
+            Collections.sort(measureList, Collections.reverseOrder());
+            Map<String,Double> sorted = sortByValue(keys);
+            int i=sorted.size();
 
-            ArrayList<String> iterator = new ArrayList<>();
-            for (String key : keys.navigableKeySet()) {
-                boolean check = false;
+            Set <Map.Entry<String, Double>> set = sorted.entrySet();
+            List<Map.Entry<String, Double>> list = new ArrayList<Map.Entry<String, Double>>(set);
+            int border = 0;
+            if(list.size()>20 && list.get(i-20).getValue()>0.0){
+                border = i-20;
+            }
+            else{
+                border = i - (int) (i*0.2);
+            }
 
-                check = (keys.get(key) > borderValue && keys.get(key) > minValue);
-                if (check) {
-                    iterator.add(key);
-                }
+            for (int j = sorted.size()-1; j>=border;--j) {
+                finalKays.add(list.get(j).getKey());
             }
-            for (String key : iterator) {
-                keys.remove(key);
-            }
-            for(String key:keys.navigableKeySet()){
-                finalKays.add(key);
-            }
+
+        }
+        else{
+            finalKays=candidateKeys;
         }
         return finalKays;
+    }
+
+    private static Map<String, Double> sortByValue(Map<String, Double> unsortMap) {
+
+        // 1. Convert Map to List of Map
+        List<Map.Entry<String, Double>> list =
+                new LinkedList<Map.Entry<String, Double>>(unsortMap.entrySet());
+
+        // 2. Sort list with Collections.sort(), provide a custom Comparator
+        //    Try switch the o1 o2 position for a different order
+        Collections.sort(list, new Comparator<Map.Entry<String, Double>>() {
+            public int compare(Map.Entry<String, Double> o1,
+                               Map.Entry<String, Double> o2) {
+                return (o1.getValue()).compareTo(o2.getValue());
+            }
+        });
+
+        // 3. Loop the sorted list and put it into a new insertion order Map LinkedHashMap
+        Map<String, Double> sortedMap = new LinkedHashMap<String, Double>();
+        for (Map.Entry<String, Double> entry : list) {
+            sortedMap.put(entry.getKey(), entry.getValue());
+        }
+
+        return sortedMap;
     }
 }

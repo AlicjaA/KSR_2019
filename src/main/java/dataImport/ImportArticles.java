@@ -23,20 +23,20 @@ public class ImportArticles {
         this.articles=articles;
     }
 
-    public void extract(Path fileDir, String labelTag, String featureTag, String startingTag) {
+    public void extract(Path fileDir, String labelTag, String featureTag, String startingTag, String splitter) {
         File folder =new File(fileDir.toString());
 
         sgmFiles = folder.listFiles();
         if (sgmFiles != null && sgmFiles.length > 0) {
             for (File sgmFile : sgmFiles) {
-                extractFile(articles, sgmFile, labelTag, featureTag, startingTag);
+                extractFile(articles, sgmFile, labelTag, featureTag, startingTag, splitter);
             }
         } else {
             System.err.println("No .sgm files in " + fileDir);
         }
     }
 
-    protected void extractFile(ArrayList<Article> articles, File sgmFile, String labelTag, String featureTag, String startingTag) {
+    protected void extractFile(ArrayList<Article> articles, File sgmFile, String labelTag, String featureTag, String startingTag, String splitter) {
         TreeMap<String, ArrayList<String>> articleData = new TreeMap<>();
         Document doc = null;
         try {
@@ -82,7 +82,7 @@ public class ImportArticles {
             }
 
             if(!featureTag.equals("empty")) {
-                String[] sb = text.getElementsByTag(featureTag).text().split(",");
+                String[] sb = text.getElementsByTag(featureTag).text().split(splitter);
                 ArrayList<String> sss = new ArrayList<>();
                 sss.add(sb[0]);
                 articleData.put("FEATURE", sss);

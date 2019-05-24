@@ -34,7 +34,7 @@ public class ExtractionManager {
             article.setWords(wordList);
             wordList= exOperate.deduplicate(wordList);
             article.setTerms(wordList);
-            if(tmp.size()>0){article.setFeatureString(tmp.get(0));}else{article.setFeatureString(" ");}
+            if(tmp.size()>0){article.setFeatureString(tmp.get(0));}else{article.setFeatureString("empty");}
         }
     }
 

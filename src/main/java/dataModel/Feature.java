@@ -4,7 +4,15 @@ public class Feature {
     private String name;
     private Double value;
     private String sValue;
-    public Feature(String name){ this.name=name; this.value=null; this.sValue=null;}
+    public Feature(String name){ this.name=name; this.value=null; this.sValue="empty";}
+    public Feature(String name, Double value){
+        this.name=name;
+        this.value=value;
+        this.sValue="empty";}
+    public Feature(String name, String sValue){
+        this.name=name;
+        this.value=null;
+        this.sValue=sValue;}
     public Double getValue() {
         return value;
     }

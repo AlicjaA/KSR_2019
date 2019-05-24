@@ -39,7 +39,7 @@ public class PowerDistanceMeasuses {
     }
 
     public Double powerDistanceMeasure(ArrayList<Double> first, ArrayList<Double> second){
-        return powerDistanceMeasuse(first,second,2.0,1.0);
+        return powerDistanceMeasuse(first,second,3.0,2.0);
     }
 
 }
