@@ -1,8 +1,9 @@
 package dataModel;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Label {
+public class Label implements Serializable {
     private String label;
     private ArrayList<FeaturesList> featuresLists;
 

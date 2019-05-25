@@ -1,6 +1,8 @@
 package dataModel;
 
-public class Feature {
+import java.io.Serializable;
+
+public class Feature  implements Serializable {
     private String name;
     private Double value;
     private String sValue;

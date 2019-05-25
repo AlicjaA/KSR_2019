@@ -19,6 +19,8 @@ public class Run {
         ArrayList<Integer> choosenFeatures;
         ArrayList<String>keyLabels= new ArrayList<>();
         ArrayList<String> customKeys = new ArrayList<>();
+
+
         selectingMethod = ui.getAsCharArray("Wybierz metodę selekcji słów kluczowych: t-average TF*IDF, i-inverse document frequency,  c- własna lista")[0];
         if(selectingMethod=='c'){
             customKeys = ui.getAsStringArrayList("Podaj własne słowa kluczowe oddzielone spacją:");
@@ -27,7 +29,7 @@ public class Run {
         keyLabels = ui.getAsStringArrayList("Podaj etykiety oddzielone spacją:");
         labelTag = ui.getAsString("Podaj tag etykiety:");
         choosenFeatures=ui.getAsIntList("Podaj oddzielone przecinkami numery cech, których chcesz użyć: \n" +
-                " 1-śr liczba wystąpień słów kluczowych,\n " +
+                " 1-śr liczba obecnpości słów kluczowych,\n " +
                 "2-średnia liczba wystąpień słów kluczowych,\n  3-suma PI,\n 4-suma PSI,\n 5-suma TF,\n 6- string, \n 7-PSI dla 6,\n" +
                 " 8-TF dla 6,\n" +
                 "9-suma BI dla 10% pierwszych słów kluczowych,\n 10- średna odległość słów kluczowych od początku tekstu,\n" +

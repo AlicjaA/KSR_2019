@@ -59,4 +59,8 @@ public class ExtractionManager {
         return exOperate.doublesNormalization(params);
     }
 
+    public ArrayList<String> getToSave(){
+        return exOperate.getToSave();
+    }
+
 }

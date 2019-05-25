@@ -29,6 +29,8 @@ public class Article {
             this.featureString = articleData.get("FEATURE").get(0);}
         else{
             this.featureString = " ";}
+
+        this.trainingSetDistances = new TreeMap<>();
     }
 
 

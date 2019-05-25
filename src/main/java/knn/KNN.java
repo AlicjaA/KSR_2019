@@ -41,6 +41,7 @@ public class KNN {
         }
         addToCoolStart(trainingSet);
 
+
     }
 
     public void addToCoolStart(ArrayList<Article> trainingSet){

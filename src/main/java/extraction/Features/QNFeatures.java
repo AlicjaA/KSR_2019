@@ -142,11 +142,15 @@ public enum QNFeatures {
         @Override
         public Double calculate(Article article, ArrayList<String> keys, LocalImportanceMeasures localImp){
             Double sum = 0.0;
-            int first10Percent = (int) Math.round(keys.size()*0.1);
+            int first10Percent;
+            if(keys.size()>2){
+            first10Percent = (int) Math.round(keys.size()*0.1);
+            }
+            else{first10Percent=1;}
             ArrayList<String> first10PercentKeys = new ArrayList<>();
 
             for(int i=0;i<first10Percent;++i){
-                first10PercentKeys.add(article.getWords().get(i));
+                first10PercentKeys.add(keys.get(i));
             }
             for (String key : first10PercentKeys) {
                 sum += localImp.binaryImportance(article.getWords(), key);

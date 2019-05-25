@@ -2,9 +2,10 @@ package dataModel;
 
 import dataModel.Feature;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class FeaturesList {
+public class FeaturesList implements Serializable {
 
     Integer id;
     private ArrayList<Feature> features;

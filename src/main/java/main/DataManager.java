@@ -22,11 +22,12 @@ public class DataManager {
     private KNN knn;
     private ArrayList<String> keyLabels;
     ArrayList<String> keyWords;
+    long seed;
 
     public DataManager(Path path, char selectingMethod, ArrayList<String> keyLabels, String labelsTag, String featureTag,
-                       ArrayList<String> customKeys, ArrayList<Integer> choosenfeatures, Double trainingPercent, char distanceMeasure, int k, String startingTag, String splitter) throws IOException {
+                       ArrayList<String> customKeys, ArrayList<Integer> choosenfeatures, Double trainingPercent, char distanceMeasure,
+                       int k, String startingTag, String splitter) throws IOException {
         extractionManager = new ExtractionManager();
-
         this.keyLabels=keyLabels;
         this.keyLabels.add("unknown");
         labelsTag.toUpperCase();
@@ -99,8 +100,12 @@ public class DataManager {
         for(Article article: articleList){
             dataToSave.add(article.toString()+"\n");
         }
+        dataToSave.add("\n GENERATE KEYS MEASURES:\n");
+        dataToSave.addAll(extractionManager.getToSave());
 
-
+        //Serializer serializer  = new Serializer();
+        //serializer.netSaver(this, ClassLoader.getSystemClassLoader().getResource("serialization.txt").toString().substring(6).trim());
+        //Files.createFile(Paths.get(ClassLoader.getSystemClassLoader().getResource("results.txt").toString().substring(6).trim()));
         Files.write (Paths.get(ClassLoader.getSystemClassLoader().getResource("results.txt").toString().substring(6).trim()), dataToSave);
 
     }

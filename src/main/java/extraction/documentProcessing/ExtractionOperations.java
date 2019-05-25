@@ -15,6 +15,8 @@ import java.nio.file.Paths;
 import java.util.*;
 
 public class ExtractionOperations {
+
+    ArrayList<String> toSave;
     private class ValueComparator<K,V extends Comparable> implements Comparator<K>
     {
         private Map<K,V> map;
@@ -28,6 +30,11 @@ public class ExtractionOperations {
             return map.get(s1).compareTo(map.get(s2));
         }
     }
+
+    public ExtractionOperations() {
+        this.toSave = new ArrayList<>();
+    }
+
 
     public ArrayList<String> makeDataList(String data){
         ArrayList<String> list = new ArrayList<>();
@@ -292,6 +299,9 @@ public class ExtractionOperations {
 
         if(selectingMethod !='c') {
             Collections.sort(measureList, Collections.reverseOrder());
+            for(Double measure: measureList){
+                this.toSave.add(measure.toString()+", ");
+            }
             Map<String,Double> sorted = sortByValue(keys);
             int i=sorted.size();
 
@@ -338,5 +348,9 @@ public class ExtractionOperations {
         }
 
         return sortedMap;
+    }
+
+    public ArrayList<String> getToSave() {
+        return toSave;
     }
 }
