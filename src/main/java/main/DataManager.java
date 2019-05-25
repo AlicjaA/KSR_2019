@@ -22,7 +22,6 @@ public class DataManager {
     private KNN knn;
     private ArrayList<String> keyLabels;
     ArrayList<String> keyWords;
-    long seed;
 
     public DataManager(Path path, char selectingMethod, ArrayList<String> keyLabels, String labelsTag, String featureTag,
                        ArrayList<String> customKeys, ArrayList<Integer> choosenfeatures, Double trainingPercent, char distanceMeasure,
@@ -105,9 +104,10 @@ public class DataManager {
 
         //Serializer serializer  = new Serializer();
         //serializer.netSaver(this, ClassLoader.getSystemClassLoader().getResource("serialization.txt").toString().substring(6).trim());
-        //Files.createFile(Paths.get(ClassLoader.getSystemClassLoader().getResource("results.txt").toString().substring(6).trim()));
-        Files.write (Paths.get(ClassLoader.getSystemClassLoader().getResource("results.txt").toString().substring(6).trim()), dataToSave);
-
+        String s="./result.txt";
+        Files.createFile(Paths.get(s));
+        //Files.write (Paths.get(ClassLoader.getSystemClassLoader().getResource("results.txt").toString().substring(6).trim()), dataToSave);
+        Files.write(Paths.get(s),dataToSave);
     }
 
 
