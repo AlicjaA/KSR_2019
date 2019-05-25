@@ -2,6 +2,7 @@ package main;
 
 import dataModel.Article;
 import dataImport.ImportArticles;
+import dataModel.Label;
 import dataModel.Result;
 import extraction.ExtractionManager;
 import knn.KNN;
@@ -40,7 +41,11 @@ public class DataManager {
         knn = new KNN(trainingArticleList,keyLabels,distanceMeasure);
         results= new ArrayList<>();
         results = knn.classification(testingArticleList,k);
-        saveData();
+        ArrayList<String> extraData = new ArrayList<>();
+        extraData.add("keyLabels: "+keyLabels+"\n extractionMethod: "+selectingMethod+"\n startingTag: "+startingTag+"\n labelsTag: "+labelsTag+"\n featureTag: "+featureTag+"\n customKeys: "+customKeys+
+                "\n choosenFeatures: "+choosenfeatures+"\n distanceMeasure: "+distanceMeasure+"\n trainingSet%: "+trainingPercent+
+                "\n k: "+k);
+        saveData(extraData);
     }
 
     private void importArticles(Path path, String featureTag, String labelTag, Double trainingPercent, String startingTag, String splitter){
@@ -72,14 +77,30 @@ public class DataManager {
         extractionManager.setFeatures(articleList,chosenFeatures,keyWords);
     }
 
-    private void saveData() throws IOException {
+    @Override
+    public String toString() {
+        return "DataManager{" +
+                "trainingArticleList=" + trainingArticleList.size() +"\n"+
+                " testingArticleList=" + testingArticleList.size() +"\n"+
+                " keyLabels=" + keyLabels +"\n"+
+                " keyWords=" + keyWords +"\n"+
+                '}';
+    }
+
+    private void saveData(ArrayList<String>extraData) throws IOException {
         ArrayList<String> dataToSave = new ArrayList<>();
-        for(Article article: articleList){
-            dataToSave.add(article.toString()+"\n");
-        }
+        dataToSave.addAll(extraData);
+        dataToSave.add("\n"+extraData+"\n");
         for(Result result: results){
             dataToSave.add(result.toString());
         }
+        dataToSave.add("\n"+knn.toString()+"\n");
+        dataToSave.add(this.toString()+"\n");
+        for(Article article: articleList){
+            dataToSave.add(article.toString()+"\n");
+        }
+
+
         Files.write (Paths.get(ClassLoader.getSystemClassLoader().getResource("results.txt").toString().substring(6).trim()), dataToSave);
 
     }

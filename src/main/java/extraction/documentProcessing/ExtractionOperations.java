@@ -13,7 +13,6 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class ExtractionOperations {
     private class ValueComparator<K,V extends Comparable> implements Comparator<K>
@@ -116,24 +115,42 @@ public class ExtractionOperations {
         return wordList;
     }
 
-    private void normalization(ArrayList<Feature> values){
-        Double min= null;
+    private void featuresNormalization(ArrayList<Feature> values){
+        Double min= 0.0;
         Double max=0.0;
         for(Feature v: values){
-            if(v.getValue() != null) {
+            if(v.getValue() != (-1.0)) {
                 max = (v.getValue() > max) ? v.getValue() : max;
-                min = (min == null) ? v.getValue() : (v.getValue() < min) ? v.getValue() : min;
+                min = (min == 0.0) ? v.getValue() : (v.getValue() < min) ? v.getValue() : min;
             }
         }
 
         for(Feature v: values){
-            if(v.getValue() != null) {
+            if(v.getValue() != (-1.0)) {
                 double normalizedValue = 0.0;
                 normalizedValue = (v.getValue() - min) / (max - min);
                 v.setValue(normalizedValue);
             }
         }
 
+    }
+
+    public ArrayList<Double> doublesNormalization(ArrayList<Double> values){
+        ArrayList<Double> result = new ArrayList<>();
+        Double min= 0.0;
+        Double max=0.0;
+        for(Double v: values){
+
+                max = (v > max) ? v : max;
+                min = (min == 0.0) ? v : (v < min) ? v : min;
+        }
+
+        for(Double v: values){
+                double normalizedValue = 0.0;
+                normalizedValue = (v - min) / (max - min);
+                result.add(normalizedValue);
+        }
+        return result;
     }
 
     public ArrayList<Feature> calculateFeatures(Article article, ArrayList<Integer> chosenFeatures, ArrayList<String> keys) {
@@ -239,7 +256,7 @@ public class ExtractionOperations {
         }
 
 
-        normalization(features);
+        featuresNormalization(features);
         return features;
     }
 

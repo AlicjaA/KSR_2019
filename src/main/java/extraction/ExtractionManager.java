@@ -55,5 +55,8 @@ public class ExtractionManager {
         }
     }
 
+    public ArrayList<Double> normalize(ArrayList<Double> params){
+        return exOperate.doublesNormalization(params);
+    }
 
 }

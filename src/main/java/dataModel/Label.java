@@ -27,4 +27,14 @@ public class Label {
     public String getLabel() {
         return label;
     }
+
+    @Override
+    public String toString() {
+
+        return "Label{" +
+                "label='" + label + '\'' +
+                ", featuresLists=" + featuresLists.size() +
+                '}';
+    }
 }
+

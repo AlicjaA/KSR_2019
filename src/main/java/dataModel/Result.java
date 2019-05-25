@@ -41,8 +41,8 @@ public class Result {
         return accuracy;
     }
 
-    public void setError() {
-        this.accuracy = accuracy;
+    public void setAccuracy() {
+        this.accuracy = (correct*(1.0)/(correct+incorect)*(1.0));
     }
 
     public void addCorect(){

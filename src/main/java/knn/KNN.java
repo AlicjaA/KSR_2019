@@ -24,8 +24,13 @@ public class KNN {
 
         @Override
         public int compare(K s1, K s2) {
-            return map.get(s1).compareTo(map.get(s2));
+             int checkV = map.get(s1).compareTo(map.get(s2));
+             if(checkV==0){
+                 checkV=1;
+             }
+            return checkV;
         }
+
     }
 
     public KNN(ArrayList<Article> trainingSet, ArrayList<String> keyLabels, char distanceMeasure){
@@ -103,7 +108,7 @@ public class KNN {
                     .filter(result -> article.getKnnLabel().equals(result.getLabel()))
                     .findAny()
                     .orElse(null);
-            if(article.getLabel()==article.getKnnLabel()){
+            if(article.getLabel().equals(article.getKnnLabel())){
                 r.addCorect();
             }
             else{
@@ -112,7 +117,7 @@ public class KNN {
         }
 
         for(Result result: results){
-            result.setError();
+            result.setAccuracy();
         }
         return results;
     }
@@ -173,7 +178,7 @@ public class KNN {
         ArrayList<Double> doubleFeatures = new ArrayList<>();
         for(Feature feature : featuresList.getFeatures()){
 
-            if(!(feature.getValue()==null) || (feature.getValue()==0.0)){
+            if(!(feature.getValue().equals(-1.0))){
                 doubleFeatures.add(feature.getValue());
             }
         }
@@ -182,5 +187,16 @@ public class KNN {
 
     private Double calculateWeightedAverageResult(Double doubleResult, Double stringResult, Integer doubleFeatureAmount){
         return (doubleResult*doubleFeatureAmount+stringResult)/(doubleFeatureAmount+1);
+    }
+
+    @Override
+    public String toString() {
+        String s="KNN{ \n";
+        for(Label l:lablesStructList){
+            s+=l.toString()+"\n";
+        }
+        s+='}';
+        return s;
+
     }
 }
