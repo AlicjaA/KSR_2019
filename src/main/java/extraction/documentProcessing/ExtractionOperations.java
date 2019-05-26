@@ -17,19 +17,6 @@ import java.util.*;
 public class ExtractionOperations {
 
     ArrayList<String> toSave;
-    private class ValueComparator<K,V extends Comparable> implements Comparator<K>
-    {
-        private Map<K,V> map;
-
-        public ValueComparator(Map<K,V> map) {
-            this.map = new HashMap<>(map);
-        }
-
-        @Override
-        public int compare(K s1, K s2) {
-            return map.get(s1).compareTo(map.get(s2));
-        }
-    }
 
     public ExtractionOperations() {
         this.toSave = new ArrayList<>();

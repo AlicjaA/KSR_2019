@@ -2,25 +2,10 @@ package extraction.importanceMeasurment;
 
 import java.util.*;
 
-/**
- * @author Alicja Anszpergier
- * Użyte metody ekstrakcji cech do reprezentacji przestrzenno-wektorowej:
- *1. ilościowa (quantitative): liczba wystąpień w dokumencie
- *2. TF (term frequency)-liczba wystąpień słowa do liczby słów w dokumencie
- *3. probabilistyczna - częstotliwość występowania termu do sumy częstotliwości występowania wszystkich termów.
- *4. własna
- * 5. binarna - jest,  nie ma
- */
 
 public class LocalImportanceMeasures {
 
-    /**
-     * Metoda realizuje tworzenie ilościowej reprezentacji przestrzenno-wektorowej dla pojedyńczego artykułu
-     *
-     * @param articleWords: reprezentacja artykułu w postaci stringu po stemizacji i stopliście
-     * @param word: słowo kluczowe
-     * @return count: double
-     */
+
     public Integer quantitativeImportance(ArrayList<String> articleWords,  String word){
         int count=0;
         for (String aword: articleWords){
@@ -31,28 +16,14 @@ public class LocalImportanceMeasures {
         return count;
     }
 
-    /**
-     * Metoda realizuje tworzenie reprezentacji przestrzenno-wektorowej dla pojedyńczego artykułu w oparciu o częstotliwość występowania słowa w artykule
-     *
-     * @param articleWords: reprezentacja artykułu w postaci stringu po stemizacji i stopliście
-     * @param word: słowo kluczowe
-     * @return count: double
-     */
+
     public double termFrequency (ArrayList<String> articleWords,  String word){
         double quantitative=quantitativeImportance(articleWords,word);
         double termFrequency = quantitative/articleWords.size();
         return termFrequency;
     }
 
-    /**
-     * Metoda realizuje tworzenie reprezentacji przestrzenno-wektorowej dla pojedyńczego artykułu w oparciu
-     * o częstotliwość występowania słowa na tle częstotliwości występowania pozostałych słów.
-     *
-     * @param articleWords: reprezentacja artykułu w postaci stringu po stemizacji i stopliście
-     * @param terms: słowa kluczowe
-     * @param word: słowo kluczowe, dla którego liczymy
-     * @return probabilistic: double
-     */
+
     public double probabilisticImportance (ArrayList<String> articleWords,  ArrayList<String> terms, String word){
         TreeMap<String, Double> termFrequencyMap = new TreeMap<String, Double>();
         double wordTF=termFrequency(articleWords,word);
@@ -73,14 +44,7 @@ public class LocalImportanceMeasures {
         return probabilistic;
     }
 
-    /**
-     * Metoda realizuje tworzenie reprezentacji przestrzenno-wektorowej dla pojedyńczego artykułu w oparciu
-     * o częstotliwość występowania słowa i słów podobnych na tle częstotliwości występowania pozostałych słów.
-     *
-     * @param articleWords: reprezentacja artykułu w postaci stringu po stemizacji i stopliście
-     * @param terms: lista słów z artykułu po deduplikacji, stemizacji i stopliście
-     * @return probabilisticSimilarityImportance:TreeMap<String, double>
-     */
+
     public Double probabilisticSimilarityImportance (ArrayList<String> articleWords,  ArrayList<String> terms, String word){
         TreeMap<String, Double> termFrequencyMap = new TreeMap<String, Double>();
         double probabilistic  = 0.0;
@@ -148,13 +112,7 @@ public class LocalImportanceMeasures {
         return Math.sqrt(sd);
     }
 
-    /**
-     * Metoda realizuje tworzenie binarnej reprezentacji przestrzenno-wektorowej dla pojedyńczego artykułu
-     *
-     * @param articleWords: reprezentacja artykułu w postaci stringu po stemizacji i stopliście
-     * @param word: słowo ze słów kluczowych
-     * @return binary: double
-     */
+
     public double binaryImportance(ArrayList<String> articleWords,  String word){
         double binary = 0;
         if(articleWords.contains(word)){

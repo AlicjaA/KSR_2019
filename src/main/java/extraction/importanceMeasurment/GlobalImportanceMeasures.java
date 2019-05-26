@@ -4,23 +4,11 @@ import dataModel.Article;
 
 import java.util.ArrayList;
 
-/**
- * @autor: Alicja Anszpergier
- * 5. IDF (inverse dokument frequency) - log(|D|/DF(ti)) stosunek liczby dokumentów do liczby dokumentów, w których wystąpiło słowo
- * 6. TF*IDF - TF(ti, d) • IDF(ti) - ważność słowa tym większa im częściej występuje w dokumencie i im żadziej występuje w innych dokumentach
- * 7. BM25 - uzależnia wynik dla słowa od relatywnej długości artykułu na tle innych artykułów ze zbioru: IDF * ((k + 1) * tf) / (k * (1.0 - b + b * (|d|/avgDl)) + tf)
- */
 
 public class GlobalImportanceMeasures {
 
 
-    /**
-     *
-     *
-     * @param articles: lista artykułów
-     * @param word: słowo, dla którego liczymy DF
-     * @return quantitativeMap:TreeMap<String, Integer>
-     */
+
 
     public Double documentFrequency (ArrayList<Article> articles, String word ){
        Double counter = 0.0;
@@ -48,7 +36,7 @@ public class GlobalImportanceMeasures {
         for(Double d:tf){
             tfidfSum+=d;
         }
-        //tfidfSum=tfidfSum/tf.length;
+        
         return tfidfSum*idf;
     }
 
